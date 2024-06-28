@@ -1,0 +1,67 @@
+server:
+  port: 18083
+  error:
+    whitelabel:
+      enabled: false
+  shutdown: graceful
+  tomcat:
+    connection-timeout: 30000
+
+spring:
+  application:
+    name: msa-order
+  mvc:
+    throw-exception-if-no-handler-found: true
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  web:
+    resources:
+      add-mappings: false
+
+  output:
+    ansi:
+      enabled: always
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/msa_order?rewriteBatchedStatements=true&autoReconnect=true&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=Asia/Seoul&cacheDefaultTimeZone=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 1234
+    hikari:
+      maximum-pool-size: 5
+      maxLifeTime: 60000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    generate-ddl: true
+    show-sql: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties:
+      hibernate:
+        default_batch_fetch_size: 1000
+    open-in-view: false
+
+logging:
+  level:
+    ROOT: info
+    org:
+      springframework:
+        web: error
+
+oAuth:
+  jwt:
+    access-token:
+      secret-key: yhjung04#
+      expired: 10800
+      before-refresh: 1800
+
+    refresh-token:
+      secret-key: yeonhoj20#
+      expired: 604800000
+
+  endpoints:
+    web:
+      cors:
+        allowed-origins: http://localhost:3000
