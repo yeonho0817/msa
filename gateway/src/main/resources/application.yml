@@ -1,0 +1,27 @@
+server:
+  port: 8000
+
+spring:
+  application:
+    name: msa-gateway
+  output:
+    ansi:
+      enabled: always
+  cloud:
+    gateway:
+      routes:
+        - id : member-service
+          uri : lb://MSA-MEMBER
+          predicates:
+            - Path=/member/**
+        - id: product-service
+          uri : lb://MSA-PRODUCT
+          predicates:
+            - Path=/product/**
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:18080/eureka
