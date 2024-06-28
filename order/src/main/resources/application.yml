@@ -65,3 +65,19 @@ oAuth:
     web:
       cors:
         allowed-origins: http://localhost:3000
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:18080/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+    enabled: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 10
+    metadata-map:
+      instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
