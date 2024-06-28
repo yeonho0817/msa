@@ -33,7 +33,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     generate-ddl: true
     show-sql: true
     database: mysql
@@ -65,6 +65,24 @@ oAuth:
     web:
       cors:
         allowed-origins: http://localhost:3000
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+    resolve-schema-properties: true
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  swagger-ui:
+    operations-sorter: alpha
+    tags-sorter: alpha
+    path: /swagger-ui.html
+    url: ${SERVICE_PATH:}/v3/api-docs # swagger api doc url
+    config-url: ${SERVICE_PATH:}/v3/api-docs/swagger-config # swagger config url
+    disable-swagger-default-url: true
+    display-query-params-without-oauth2: true
+    show-common-extensions: true
+  use-fqn: true
 
 eureka:
   client:
