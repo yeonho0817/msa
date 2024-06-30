@@ -56,17 +56,6 @@ public final class JwtProvider {
         return !now.before(new Date(claims.getExpiration().getTime() - accessTokenRefreshTime*1000));
     }
 
-    private Claims getClaimsFromRefreshToken(String token) {
-        try {
-            return Jwts.parser()
-                .setSigningKey(DatatypeConverter.parseBase64Binary(refreshSecretKey))
-                .parseClaimsJws(token)
-                .getBody();
-        } catch (ExpiredJwtException e) {
-            return e.getClaims();
-        }
-    }
-
     public String getSubject(String token) {
         return String.valueOf(getClaimsFromToken(token).getSubject());
     }
@@ -91,29 +80,4 @@ public final class JwtProvider {
             .compact();
     }
 
-    public boolean isValidToken(String token) {
-        try {
-            Claims claims = getClaimsFromToken(token);
-            return !claims.getExpiration().before(new Date());
-        } catch (JwtException | NullPointerException exception) {
-            return false;
-        }
-    }
-
-    public boolean isValidRefreshToken(String token) {
-        try {
-            Claims claims = getClaimsFromRefreshToken(token);
-            return !claims.getExpiration().before(new Date());
-        } catch (JwtException | NullPointerException exception) {
-            return false;
-        }
-    }
-
-    public Date getTokenExpiration(String token) {
-        return getClaimsFromToken(token).getExpiration();
-    }
-
-    public Date getRefreshTokenExpiration(String token) {
-        return getClaimsFromRefreshToken(token).getExpiration();
-    }
 }
