@@ -14,10 +14,26 @@ spring:
           uri : lb://MSA-MEMBER
           predicates:
             - Path=/member/**
+        - id: product-service1
+          uri: lb://MSA-PRODUCT
+#          uri: http://localhost:18082
+          predicates:
+            - Path=/product/no
+            - Method=GET
         - id: product-service
-          uri : lb://MSA-PRODUCT
+          uri: lb://MSA-PRODUCT
+#          uri : http://localhost:18082
           predicates:
             - Path=/product/**
+          filters:
+            - PreGatewayAuthorizationFilter
+
+logging:
+  level:
+    ROOT: info
+    org:
+      springframework:
+        web: error
 
 eureka:
   client:
@@ -25,3 +41,15 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://localhost:18080/eureka
+
+oAuth:
+  jwt:
+    access-token:
+      secret-key: yhjung04#
+      expired: 10800
+      before-refresh: 1800
+
+    refresh-token:
+      secret-key: yeonhoj20#
+      expired: 604800000
+
