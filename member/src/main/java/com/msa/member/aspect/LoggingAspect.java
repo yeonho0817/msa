@@ -1,5 +1,6 @@
 package com.msa.member.aspect;
 
+import com.msa.member.util.Constants;
 import com.msa.member.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.logstash.logback.marker.Markers;
@@ -15,10 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Aspect
@@ -35,7 +33,6 @@ public class LoggingAspect {
         int msgCount = getMsgCount();
         httpRequest.setAttribute("msgCount", msgCount);
         for (int i = 0; i < signature.getParameterNames().length; i++) {
-
             if(ObjectUtils.isEmpty(joinPoint.getArgs()[i])) continue;
             if(Arrays.stream(joinPoint.getArgs()[i].getClass().getInterfaces()).anyMatch(a -> a.equals(List.class))
                 && ((List)joinPoint.getArgs()[i]).stream().anyMatch(a -> a instanceof MultipartFile)) continue;
@@ -45,7 +42,7 @@ public class LoggingAspect {
 
             paramMap.put(signature.getParameterNames()[i], joinPoint.getArgs()[i]);
         }
-        String logInfo = httpRequest.getMethod() + " " + httpRequest.getRequestURI() + "  parameter: " + JsonUtil.marshalLog(paramMap);
+        String logInfo = httpRequest.getMethod() + " " + httpRequest.getRequestURI() + "  header: {\"X-Member-Id\":" + httpRequest.getHeader(Constants.X_MEMBER_ID) + "}" + "  parameter: " + JsonUtil.marshalLog(paramMap);
 
         log.info(Markers.appendEntries(paramMap), "request[{}]: {}", msgCount, logInfo);
     }

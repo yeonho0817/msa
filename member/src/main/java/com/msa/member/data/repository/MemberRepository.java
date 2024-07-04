@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByUsernameAndDeletedAndEnabledAndAccountNonLocked(String username, boolean deleted, boolean enabled, boolean accountNonLocked);
+
+    boolean existsByUsernameAndDeleted(String username, boolean deleted);
 }

@@ -63,5 +63,11 @@ public class Member implements UserDetails {
         return List.of(new SimpleGrantedAuthority("ROLE_" + permission.getDescription()));
     }
 
-
+    public Member(String name, String username, String password, String phoneNumber, Permission permission) {
+        this.name = name;
+        this.username = username;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.permission = permission;
+    }
 }
