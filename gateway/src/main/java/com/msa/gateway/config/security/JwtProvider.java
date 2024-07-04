@@ -1,6 +1,9 @@
 package com.msa.gateway.config.security;
 
-import io.jsonwebtoken.*;
+import com.msa.gateway.util.Constants;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -28,11 +31,14 @@ public class JwtProvider {
     public boolean isValidToken(String token) {
         try {
             Claims claims = getClaimsFromToken(token);
-            Date date = getClaimsFromToken(token).getExpiration();
             return !claims.getExpiration().before(new Date());
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public String getMemberId(String token) {
+        return String.valueOf(getClaimsFromToken(token).get(Constants.MEMBER_ID));
     }
 
     private Claims getClaimsFromToken(String token) {
@@ -45,4 +51,5 @@ public class JwtProvider {
             return e.getClaims();
         }
     }
+
 }

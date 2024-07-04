@@ -51,7 +51,11 @@ public class PreGatewayAuthorizationFilter extends AbstractGatewayFilterFactory<
                 return unauthorizedResponse(exchange);
             }
 
-            return chain.filter(exchange);
+            ServerWebExchange mutatedExchange = exchange.mutate()
+                    .request(r -> r.header("X-Member-Id", jwtProvider.getMemberId(token)))
+                    .build();
+
+            return chain.filter(mutatedExchange);
         };
     }
 
@@ -81,4 +85,6 @@ public class PreGatewayAuthorizationFilter extends AbstractGatewayFilterFactory<
         DataBuffer buffer = response.bufferFactory().wrap(bytes);
         return response.writeWith(Mono.just(buffer));
     }
+
+
 }

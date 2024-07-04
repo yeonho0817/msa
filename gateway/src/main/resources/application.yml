@@ -10,23 +10,41 @@ spring:
   cloud:
     gateway:
       routes:
-        - id : member-service
+        - id : member-service-sign-up
           uri : lb://MSA-MEMBER
           predicates:
-            - Path=/member/**
-        - id: product-service1
-          uri: lb://MSA-PRODUCT
-#          uri: http://localhost:18082
+            - Path=/member-service/member/sign-up
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/member-service/(?<segment>.*), /$\{segment}  # == /member-service/users -> /member
+        - id: member-service-sign-in
+          uri: lb://MSA-MEMBER
           predicates:
-            - Path=/product/no
-            - Method=GET
-        - id: product-service
-          uri: lb://MSA-PRODUCT
-#          uri : http://localhost:18082
+            - Path=/member-service/member/sign-in
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/member-service/(?<segment>.*), /$\{segment}
+        - id: member-service
+          uri: lb://MSA-MEMBER
           predicates:
-            - Path=/product/**
+            - Path=/member-service/member/**
           filters:
             - PreGatewayAuthorizationFilter
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/member-service/(?<segment>.*), /$\{segment}
+        - id: product-service
+          uri: lb://MSA-PRODUCT
+          predicates:
+            - Path=/product-service/product/**
+          filters:
+            - PreGatewayAuthorizationFilter
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/product-service/(?<segment>.*), /$\{segment}
+#              args: # Config 클래스에 사용할 멤버변수 정의
+#                headerName: Authorization
+#                granted: Bearer
 
 logging:
   level:
